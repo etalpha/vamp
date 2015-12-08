@@ -4,9 +4,10 @@ import copy
 
 class Atom:
 
-    def __init__(self, name=None, coodinate=None, **kwargs):
+    def __init__(self, name=None, coodinate=None, TF=None, magmom=0, belong=None):
         self.name = None
         self.coodinate = np.array([0.0, 0.0, 0.0])
+        self.TF = np.array([True, True, True])
         self.magmom = None
         self.belong = None
         if type(name) is str:
@@ -18,11 +19,22 @@ class Atom:
             self.belong = copy.deepcopy(name.belong)
         if coodinate:
             self.coodinate = np.array(coodinate, float)
+        if TF:
+            self.TF = np.array(TF, bool)
+        if magmom:
+            self.magmom = magmom
+        if belong:
+            self.belong = belong
         return None
 
     def __setitem__(self, key, value):
         if key is 'coodinate':
             self.coodinate = np.array(value, dtype=float)
+        elif key is 'TF':
+            self.TF = np.array(value, dtype=bool)
+            for i in range(3):
+                if value[i] == 'F':
+                    self.TF[i] = False
         elif key is 'name':
             self.name = value
         elif key is 'x':
@@ -32,9 +44,9 @@ class Atom:
         elif key is 'z':
             self.coodinate[2] = value
         elif key is 'm':
-            self.magmom = value
+            self.magmom = float(value)
         elif key is 'b':
-            self.belong = value
+            self.belong = str(value)
         else:
             raise IndexError
         return None
@@ -42,6 +54,8 @@ class Atom:
     def __getitem__(self, key):
         if key is 'coodinate':
             return self.coodinate
+        elif key is 'TF':
+            return self.TF
         elif key is 'name':
             return self.name
         elif key is 'x':
