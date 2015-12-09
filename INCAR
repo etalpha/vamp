@@ -1,0 +1,42 @@
+LWAVE = .FALSE.
+SYSTEM = AuNiO
+NBANDS = 1400
+NWRITE = 2
+NPAR = 4
+LPLANE = .TRUE.
+ ISTART = 0
+
+GGA = PE
+ISPIN = 2
+!NUPDOWN =0
+MAGMOM = 80*0 2 2 2 2 -2 -2 -2 2 2 2 2 -2 -2 -2 -2 2 2 2 2 -2 -2 -2 -2 2 2 2 2 -2 -2 -2 -2 -2 -2 -2 -2 2 2 2 2 -2 -2 -2 -2 2 2 2 2 -2 -2 -2 -2 2 2 2 2 -2 -2 -2 -2 2 2 2 2 2 2 2 2 -2 -2 -2 -2 2 2 2 2 -2 -2 -2 -2 80*0
+ISYM = 0
+ENCUT = 400
+ENAUG = 2400
+SIGMA = 0.001
+
+LDAU = .TRUE.  !DFT+U
+LDAUTYPE = 2   !normal dft equation for DFT+U
+LDAUL = -1 2 -1   !orbital use +U Ni O
+LDAUU = 0.0 6.0 0.0 !parameter U
+LDAUJ = 0.0 1.0 0.0 !parameter is U-J
+LASPH = .TRUE.
+LMAXMIX = 4
+ISMEAR = -5
+
+PREC = Normal
+ALGO = Normal
+LREAL = .FALSE.
+NELM = 200
+NELMIN = 3
+EDIFF = 5E-3
+
+IBRION =2
+IWAVPR =1
+EDIFFG =1E-4
+NSW =100
+ISIF =2
+
+!LORBIT = 2
+!RWIGS = 1.3 1.0
+!I_CONSTRAINED_M = 1

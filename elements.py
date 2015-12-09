@@ -7,6 +7,12 @@ class Elements:
         self.dic = dict()
         self.lis = list()
 
+    def __str__(self):
+        print('Elements')
+        print(self.dic)
+        print(self.lis)
+        return ''
+
     def add_element(self, name):
         if name not in self.dic:
             self.dic[name] = Element(name)
@@ -27,6 +33,20 @@ class Elements:
         self.dic = dict()
         for elem in self.lis:
             self.add_element(elem.name)
+
+    def name_list(self):
+        lis = []
+        self.dic_to_lis()
+        for elem in self.lis:
+            lis.append(elem.name)
+        return lis
+
+    def num_list(self):
+        lis = []
+        self.dic_to_lis()
+        for elem in self.lis:
+            lis.append(str(int(elem.num)))
+        return lis
 
     def element_list(self):
         self.dic_to_lis()

@@ -8,7 +8,7 @@ class Atom:
         self.name = None
         self.coodinate = np.array([0.0, 0.0, 0.0])
         self.TF = np.array([True, True, True])
-        self.magmom = None
+        self.magmom = 0
         self.belong = None
         if type(name) is str:
             self.name = str(name)
@@ -55,7 +55,15 @@ class Atom:
         if key is 'coodinate':
             return self.coodinate
         elif key is 'TF':
-            return self.TF
+            tmp = list(self.TF)
+            tmp2 = []
+            for t in tmp:
+                if t is True:
+                    tmp2.append('T')
+                else:
+                    tmp2.append('F')
+            return tmp2
+
         elif key is 'name':
             return self.name
         elif key is 'x':
@@ -92,7 +100,7 @@ class Atom:
             other = np.array(other, float)
         return self + (-other)
 
-    def transform(self, matrix):
+    def transformed(self, matrix):
         ret = Atom(self)
         if type(matrix) in [list, tuple]:
             matrix = np.array(matrix, float)
@@ -103,6 +111,14 @@ class Atom:
         vec = self.coodinate - other.coodinate
         return np.linalg.norm(vec)
 
+    def __iadd__(self, other):
+        self.coodinate = (self + other).coodinate
+
+    def __isub__(self, other):
+        self.coodinate = (self - other).coodinate
+
+    def transform(self, matrix):
+        self.coodinate = self.transformed(matrix).coodinate
 
 # a = Atom('Au', (1, 1, 1))
 # b = Atom(a, (1, 2, 3))

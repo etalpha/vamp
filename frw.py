@@ -3,27 +3,31 @@ import re
 
 class Frw:
 
-    def __init__(self, info, adress):
+    def __init__(self, info, adress=None):
         self.info = info
-        self.adress = adress
 
-    def start_reading(self):
-        self.f = open(self.adress, 'r')
-
-    def cast_line(self, line):
-        line = line.strip()
-        if '!' in line:
-            line = line.split('!', 1)
-            line = list(map(lambda x: x.strip(), line))
-        else:
-            line = [line, '']
-        line[0] = re.split('\s+', line[0])
-        line[1] = re.split('[\s!]+', line[1])
-        return line
+    def start_reading(self, adress):
+        self.f = open(adress, 'r')
 
     def nextline(self):
-        return self.cast_line(self.f.readline())
+        line = self.f.readline()
+        if line:
+            return self.cast_line(line)
 
+    def f_to_num(self, num):
+        raise NotImplementedError
+
+    def num_to_f(self, num):
+        l = len(str(num))
+        ret = str(num) + '0' * (18 - l)
+        return ret
+
+    def array_to_f(self, arr):
+        arr = list(arr)
+        arr = map(str, arr)
+        arr = map(self.num_to_f, arr)
+        arr = ' '.join(arr)
+        return arr
 
 # a = 'abb aa  hh\n'
 # b = Frw('a', 'a')

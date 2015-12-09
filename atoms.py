@@ -21,16 +21,24 @@ class Atoms(list):
         elements = Elements()
         for atom in self:
             elements.add_element(atom.name)
-        return elements.element_list()
+        elements.dic_to_lis()
+        return elements
 
+    # def create_element_list(self):
+    #     self.sort()
+    #     elements = Elements()
+    #     for atom in self:
+    #         elements.add_element(atom.name)
+    #     return elements.element_list()
 
-# a = Atoms()
-# a.append(Atom('Au', (0, 0, 0)))
-# a.append(Atom('Ag', (1, 1, 0)))
-# a.append(Atom('Ag', (0, 0, 0)))
-# a.append(Atom('Ag', (0, 1, 0)))
-# a.sort('name', 'z', 'x', 'y')
-# b = a.create_elements()
-# for i in b:
-#     print(i.name)
-#     print(i.num)
+    def translation(self, vector):
+        for atom in self:
+            atom += vector
+
+    def transform(self, matrix):
+        for atom in self:
+            atom.transform(matrix)
+
+    def set_belong(self, name):
+        for atom in self:
+            atom['b'] = name
