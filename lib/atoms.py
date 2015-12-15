@@ -1,8 +1,17 @@
-from atom import Atom
-from elements import Elements
+from .atom import Atom
+from .elements import Elements
 
 
 class Atoms(list):
+
+    def __init__(self, atoms=None):
+        list.__init__(self)
+        if atoms:
+            if type(atoms) == Atoms:
+                for atom in atoms:
+                    self.append(Atom(atom))
+            else:
+                raise TypeError
 
     def append(self, object):
         if type(object) is not Atom:
@@ -20,16 +29,8 @@ class Atoms(list):
         self.sort()
         elements = Elements()
         for atom in self:
-            elements.add_element(atom.name)
-        elements.dic_to_lis()
+            elements.add_atom(atom.name)
         return elements
-
-    # def create_element_list(self):
-    #     self.sort()
-    #     elements = Elements()
-    #     for atom in self:
-    #         elements.add_element(atom.name)
-    #     return elements.element_list()
 
     def translation(self, vector):
         for atom in self:
@@ -42,3 +43,8 @@ class Atoms(list):
     def set_belong(self, name):
         for atom in self:
             atom['b'] = name
+
+    # def __getitem__(self, key):
+    #     if isinstance(key,(int)):
+    #         pass
+    #

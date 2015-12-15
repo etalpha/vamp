@@ -1,13 +1,16 @@
 import re
 
 
-class Frw:
+class Frw:  # super class of all read/write class.
 
     def __init__(self, info, adress=None):
         self.info = info
 
     def start_reading(self, adress):
         self.f = open(adress, 'r')
+
+    def end_reading(self):
+        self.f.close()
 
     def nextline(self):
         line = self.f.readline()
