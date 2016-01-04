@@ -6,34 +6,25 @@ class Atom:
 
     # str and Atom are allowed as atom
     def __init__(self, atom=None, coodinate=None, TF=None, magmom=0, belong=None):
-        self.name = None
-        self.coodinate = np.array([0.0, 0.0, 0.0])
-        self.TF = np.array([True, True, True])
-        self.magmom = 0
-        self.belong = None
-        self.pdos = None
+        self._name = None
+        self._coodinate = np.array([0.0, 0.0, 0.0])
+        self._TF = np.array([True, True, True])
+        self._magmom = 0
+        self._belong = None
+        self._pdos = None
         if atom:
-            if type(atom) is str:
-                self.name = str(atom)
+            if isinstance(atom, str):
+                self.name = atom
             elif type(atom) is Atom:
                 self.__dict__ = copy.deepcopy(atom.__dict__)
             else:
-                raise TypeError
+                raise TypeError('atom must be Atom or str')
         if coodinate:
-            if type(coodinate) in (list, tuple, np.ndarray):
-                self.coodinate = np.array(coodinate, float)
-            else:
-                raise TypeError
+            self.coodinate = np.array(coodinate, float)
         if TF:
-            if type(TF) in (list, tuple, np.ndarray):
-                self.TF = np.array(TF, bool)
-            else:
-                raise TypeError
+            self.TF = np.array(TF, bool)
         if magmom:
-            if type(magmom) in (int, float):
-                self.magmom = magmom
-            else:
-                raise TypeError
+            self.magmom = magmom
         if belong:
             if type(belong) in (int, float, str):
                 self.belong = str(belong)
@@ -41,14 +32,66 @@ class Atom:
                 raise TypeError
         # return None
 
+    @property
+    def name(self):
+        return self._name
+
+    @name.setter
+    def name(self, name):
+        self._name = str(name)
+
+    @property
+    def coodinate(self):
+        return self._coodinate
+
+    @coodinate.setter
+    def coodinate(self, coodinate):
+        if isinstance(coodinate, (list, tuple, np.ndarray)):
+            self._coodinate = np.array(coodinate, float)
+        else:
+            raise TypeError('coodinate must be an iterable')
+
+    @property
+    def TF(self):
+        return ['T' if x else 'F' for x in self._TF]
+
+    @TF.setter
+    def TF(self, TF):
+        if not isinstance(TF, (list, tuple, np.ndarray)):
+            raise TypeError('TF must be an iterable')
+        elif len(TF) is not 3:
+            raise IndexError('TF must have 3 values')
+        else:
+            for i in range(3):
+                if TF[i] in ('F', 'f', False):
+                    self._TF[i] = False
+                else:
+                    self._TF[i] = True
+
+    @property
+    def magmom(self):
+        return self._magmom
+
+    @magmom.setter
+    def magmom(self, magmom):
+        if isinstance(magmom, (int, float)):
+            self._magmom = float(magmom)
+        else:
+            raise TypeError('magmom`s argument must be int or float')
+
+    @property
+    def belong(self):
+        return self._belong
+
+    @belong.setter
+    def belong(self, belong):
+        self._belong = str(belong)
+
     def __setitem__(self, key, value):
         if key is 'coodinate':
             self.coodinate = np.array(value, dtype=float)
         elif key is 'TF':
-            self.TF = np.array(value, dtype=bool)
-            for i in range(3):
-                if value[i] == 'F':
-                    self.TF[i] = False
+            self.TF = value
         elif key is 'name':
             self.name = str(value)
         elif key is 'x':
@@ -69,15 +112,7 @@ class Atom:
         if key is 'coodinate':
             return self.coodinate
         elif key is 'TF':
-            tmp = list(self.TF)
-            tmp2 = []
-            for t in tmp:
-                if t is True:
-                    tmp2.append('T')
-                else:
-                    tmp2.append('F')
-            return tmp2
-
+            return self.TF
         elif key is 'name':
             return self.name
         elif key is 'x':
@@ -134,7 +169,8 @@ class Atom:
     def transform(self, matrix):
         self.coodinate = self.transformed(matrix).coodinate
 
-# a = Atom('Au', (1, 1, 1), (True,True,True))
+# a = Atom('Au', (1, 1, 1), (False, True, True))
+# print(a.TF)
 # print(type(a))
 # b = Atom(a)
 # for k, v in b.__dict__.items():

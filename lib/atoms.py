@@ -7,7 +7,7 @@ class Atoms(list):
     def __init__(self, atoms=None):
         list.__init__(self)
         if atoms:
-            if type(atoms) == Atoms:
+            if isinstance(atoms, Atoms):
                 for atom in atoms:
                     self.append(Atom(atom))
             else:

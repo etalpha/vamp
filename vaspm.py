@@ -1,8 +1,8 @@
-from lib.info import Info
-from lib.poscar import Poscar
-from lib.incar import Incar
-from lib.doscar import Doscar
-from lib.com import Com
+from vaspm.lib.info import Info
+from vaspm.lib.poscar import Poscar
+from vaspm.lib.incar import Incar
+from vaspm.lib.doscar import Doscar
+from vaspm.lib.com import Com
 import os
 
 

@@ -14,9 +14,9 @@ class Incar(Frw):
 
     def write(self, adress):
         f = open(adress, 'w')
-        for key in self.info.info:
+        for key in self.info.incar:
             if key != '':
-                f.write(key + '=' + self.info.info[key] + '\n')
+                f.write(key + '=' + self.info.incar[key] + '\n')
         f.close()
 
     def cast_line(self, line):
