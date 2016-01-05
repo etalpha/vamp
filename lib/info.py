@@ -36,7 +36,18 @@ class Info:
         lis = []
         for atom in self.atoms:
             lis.append(atom['m'])
-        self.incar['MAGMOM'] = ' '.join(map(str, lis))
+        lis2 = []
+        lis2.append([0,lis[0]])
+        for mag in lis:
+            if lis2[-1][1] == mag:
+                lis2[-1][0] += 1
+            else:
+                lis2.append([1, mag])
+        lis3 = []
+        for item in lis2:
+            lis3.append('*'.join(map(str, item)))
+        # self.incar['MAGMOM'] = ' '.join(map(str, lis))
+        self.incar['MAGMOM'] = ' '.join(lis3)
 
     def set_magmom_in_to_pos(self):
         if 'MAGMOM' in self.incar:

@@ -38,9 +38,14 @@ class Poscar(Frw):
                     if line[0][0][0] in ['s', 'S']:
                         self.info.selective_dynamics = True
                         line = self.nextline()
-                    if line[0][0][0] in ['c', 'C']:
+                    elif line[0][0][0] in ['D', 'd']:
+                        self.info.selective_dynamics = False
+                        line = self.nextline()
+                    elif line[0][0][0] in ['c', 'C']:
                         self.info.cartesian = True
                         line = self.nextline()
+                    else:
+                        raise RuntimeError('error when reading poscar')
                 self.__add_atom(atom, line)
                 line = self.nextline()
         self.info.create_elements()
