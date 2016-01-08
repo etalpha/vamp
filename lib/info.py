@@ -66,6 +66,27 @@ class Info:
             for m, atom in zip(lis, self.atoms):
                 atom['m'] = m
 
+    def set_LDAUL_in_to_pos(self):
+        LDAUL = self.incar['LDAUL'].split('!')[0].strip()
+        LDAUL = re.split('\s', LDAUL)
+        LDAUL = list(map(float, LDAUL))
+        print(LDAUL)
+
+    def set_LDAUL_pos_to_in(self):
+        raise NotImplementedError
+
+    def set_LDAUU_in_to_pos(self):
+        raise NotImplementedError
+
+    def set_LDAUU_pos_to_in(self):
+        raise NotImplementedError
+
+    def set_LDAUJ_in_to_pos(self):
+        raise NotImplementedError
+
+    def set_LDAUJ_pos_to_in(self):
+        raise NotImplementedError
+
     def __add__(self, other):
         ret = copy.deepcopy(self)
         add = copy.copy(other)
@@ -82,7 +103,7 @@ class Info:
         for atom in self.atoms:
             if atom['b'] not in dic:
                 dic[atom['b']] = copy.deepcopy(self)
-                dic[atom['b']].incar['SYSTEM'] = atom['b']
+                # dic[atom['b']].incar['SYSTEM'] = atom['b']
                 dic[atom['b']].atoms = Atoms()
             dic[atom['b']].atoms.append(atom)
         return dic

@@ -1,11 +1,11 @@
 class Element:
 
-    def __init__(self, element=None, num=None, LUAUL=None, LUAUU=None, LUAUJ=None):
-        self.name = ''
-        self.num = 0
-        self.LUAUL = None
-        self.LUAUU = None
-        self.LUAUJ = None
+    def __init__(self, element=None, num=None, LDAUL=None, LDAUU=None, LDAUJ=None):
+        self._name = ''
+        self._num = 0
+        self._LDAUL = None
+        self._LDAUU = None
+        self._LDAUJ = None
         if element:
             if type(element) == Element:
                 self.name = element.name
@@ -22,21 +22,61 @@ class Element:
                 self.num = int(num)
             else:
                 raise TypeError
-        if LUAUJ:
-            if type(LUAUJ) in (int, float):
-                self.LUAUJ = LUAUJ
+        if LDAUJ:
+            if type(LDAUJ) in (int, float):
+                self.LDAUJ = LDAUJ
             else:
                 raise TypeError
-        if LUAUU:
-            if type(LUAUU) in (int, float):
-                self.LUAUU = LUAUU
+        if LDAUU:
+            if type(LDAUU) in (int, float):
+                self.LDAUU = LDAUU
             else:
                 raise TypeError
-        if LUAUL:
-            if type(LUAUL) in (int, float):
-                self.LUAUL = LUAUL
+        if LDAUL:
+            if type(LDAUL) in (int, float):
+                self.LDAUL = LDAUL
             else:
                 raise TypeError
+
+    @property
+    def name(self):
+        return self._name
+
+    @name.setter
+    def name(self, name):
+        self._name = str(name)
+
+    @property
+    def num(self):
+        return self._num
+
+    @num.setter
+    def num(self, num):
+        self._num = int(num)
+
+    @property
+    def LDAUL(self):
+        return self._LDAUL
+
+    @LDAUL.setter
+    def LDAUL(self, LDAUL):
+        self._LDAUL = float(LDAUL)
+
+    @property
+    def LDAUU(self):
+        return self._LDAUU
+
+    @LDAUU.setter
+    def LDAUU(self, LDAUU):
+        self._LDAUU = float(LDAUU)
+
+    @property
+    def LDAUJ(self):
+        return self._LDAUJ
+
+    @LDAUJ.setter
+    def LDAUJ(self, LDAUJ):
+        self._LDAUJ = float(LDAUJ)
 
     def set_num(self, num):
         self.num = int(num)
@@ -44,11 +84,11 @@ class Element:
     def set_name(self, name):
         self.name = str(name)
 
-    def set_LUAUL(self, LUAUL):
-        self.LUAUL = float(LUAUL)
+    def set_LDAUL(self, LDAUL):
+        self.LDAUL = float(LDAUL)
 
-    def set_LUAUU(self, LUAUU):
-        self.LUAUU = float(LUAUU)
+    def set_LDAUU(self, LDAUU):
+        self.LDAUU = float(LDAUU)
 
-    def set_LUAUJ(self, LUAUJ):
-        self.LUAUJ = float(LUAUJ)
+    def set_LDAUJ(self, LDAUJ):
+        self.LDAUJ = float(LDAUJ)

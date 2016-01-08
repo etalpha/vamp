@@ -9,7 +9,7 @@ from .elements import Elements
 class Poscar(Frw):
 
     def __add_atom(self, atom, line):
-        a = Atom(atom, line[0][0:3])
+        # a = Atom(atom, line[0][0:3])
         self.info.atoms.append(Atom(atom, line[0][0:3]))
         if len(line[0]) >= 6:
             self.info.atoms[-1]['TF'] = line[0][3:6]
@@ -19,6 +19,9 @@ class Poscar(Frw):
         if '!B' in line[1]:
             self.info.atoms[-1]['b'] = line[
                 1][line[1].index('!B') + 1]
+        if '!C' in line[1]:
+            self.info.atoms[-1].comment = line[
+                    1][line[1].index('!C') + 1]
 
     def read(self, adress):
         self.start_reading(adress)
@@ -75,6 +78,8 @@ class Poscar(Frw):
                 f.write(' !M '+str(atom.magmom))
             if atom.belong:
                 f.write(' !B '+str(atom.belong))
+            if atom.comment:
+                f.write(' !C '+str(atom.comment))
             f.write('\n')
         f.close()
 

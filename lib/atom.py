@@ -11,6 +11,7 @@ class Atom:
         self._TF = np.array([True, True, True])
         self._magmom = 0
         self._belong = None
+        self._comment = None
         self._pdos = None
         if atom:
             if isinstance(atom, str):
@@ -86,6 +87,14 @@ class Atom:
     @belong.setter
     def belong(self, belong):
         self._belong = str(belong)
+
+    @property
+    def comment(self):
+        return self._comment
+
+    @comment.setter
+    def comment(self, comment):
+        self._comment = str(comment)
 
     def __setitem__(self, key, value):
         if key is 'coodinate':

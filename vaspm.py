@@ -75,10 +75,11 @@ class Vaspm:
 
     def split(self):
         infos = self.info.split()
-        lis = []
-        for info in infos.values():
-            lis.append(Vaspm(info))
-        return lis
+        print(infos)
+        ret = dict()
+        for bel, info in infos.items():
+            ret[bel] = Vaspm(info)
+        return ret
 
     def set_belong(self, name=None):
         if name is None:
