@@ -1,5 +1,6 @@
 from .frw import Frw
 from .info import Info
+from .tag import Tag
 import numpy as np
 from .atom import Atom
 import re
@@ -25,7 +26,10 @@ class Poscar(Frw):
 
     def read(self, adress):
         self.start_reading(adress)
-        self.info.incar['SYSTEM'] = ''.join(self.nextline()[0])
+        # self.info.tags['SYSTEM'] = ''.join(self.nextline()[0])
+        self.info.tags['SYSTEM'] = Tag()
+        self.info.tags['SYSTEM'].key = 'SYSTEM'
+        self.info.tags['SYSTEM'].val = ''.join(self.nextline()[0])
         self.info.scale = self.nextline()[0][0]
         self.info.lattice.append(np.array(self.nextline()[0][0:3], float))
         self.info.lattice.append(np.array(self.nextline()[0][0:3], float))
@@ -58,7 +62,7 @@ class Poscar(Frw):
         self.info.atoms.sort()
         self.info.create_elements()
         f = open(adress,'w')
-        f.write(self.info.incar['SYSTEM'] + '\n')
+        f.write(self.info.tags['SYSTEM'].val + '\n')
         f.write(self.num_to_f((self.info.scale)) + '\n')
         f.write(self.array_to_f(self.info.lattice[0]) + '\n')
         f.write(self.array_to_f(self.info.lattice[1]) + '\n')

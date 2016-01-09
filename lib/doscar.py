@@ -20,8 +20,7 @@ class Doscar(Frw):
             for i in range(int(info[2])):
                 line = self.nextline()
                 line = list(map(float, line))
-                atom.pdos.append(line)
-            atom.pdos = np.array(atom.pdos)
+                atom.pdos.append(np.array(line)
 
     def cast_line(self, line):
         line = line.strip()

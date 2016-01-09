@@ -78,17 +78,17 @@ class Element:
     def LDAUJ(self, LDAUJ):
         self._LDAUJ = float(LDAUJ)
 
-    def set_num(self, num):
-        self.num = int(num)
-
-    def set_name(self, name):
-        self.name = str(name)
-
-    def set_LDAUL(self, LDAUL):
-        self.LDAUL = float(LDAUL)
-
-    def set_LDAUU(self, LDAUU):
-        self.LDAUU = float(LDAUU)
-
-    def set_LDAUJ(self, LDAUJ):
-        self.LDAUJ = float(LDAUJ)
+    # def set_num(self, num):
+    #     self.num = int(num)
+    #
+    # def set_name(self, name):
+    #     self.name = str(name)
+    #
+    # def set_LDAUL(self, LDAUL):
+    #     self.LDAUL = float(LDAUL)
+    #
+    # def set_LDAUU(self, LDAUU):
+    #     self.LDAUU = float(LDAUU)
+    #
+    # def set_LDAUJ(self, LDAUJ):
+    #     self.LDAUJ = float(LDAUJ)
