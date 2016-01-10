@@ -17,7 +17,7 @@ class Vaspm:
         self._incar = Incar(self.info)
         self._doscar = Doscar(self.info)
         self.com = Com(self.info)
-        self.incar = self.info.incar
+        self.incar = self.info.tags
         self.atoms = self.info.atoms
 
     def read_poscar(self, adress):

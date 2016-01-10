@@ -13,7 +13,7 @@ class Incar(Frw):
             else:
                 tag = Tag()
                 tag.readline_incar(cast)
-                self.info.tags[tag.key] = tag.val
+                self.info.tags[tag.key] = tag
 
         # self.start_reading(adress)
         # line = self.nextline()
@@ -24,11 +24,11 @@ class Incar(Frw):
 
     def write(self, adress):
         f = open(adress, 'w')
-        for key, val in self.info.tags:
+        for key, val in self.info.tags.items():
             if isinstance(key, Tag):
                 f.write('\n')
             else:
-                f.write(val.strline_incar + '\n')
+                f.write(val.strline_incar() + '\n')
         # for key in self.info.incar:
         #     if key != '':
         #         f.write(key + '=' + self.info.incar[key] + '\n')

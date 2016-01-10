@@ -77,6 +77,8 @@ class Atom:
     def magmom(self, magmom):
         if isinstance(magmom, (int, float)):
             self._magmom = float(magmom)
+        elif magmom is None:
+            self._magmom = None
         else:
             raise TypeError('magmom`s argument must be int or float')
 
@@ -86,7 +88,10 @@ class Atom:
 
     @belong.setter
     def belong(self, belong):
-        self._belong = str(belong)
+        if belong is not None:
+            self._belong = str(belong)
+        else:
+            self._belong = None
 
     @property
     def comment(self):
@@ -94,7 +99,10 @@ class Atom:
 
     @comment.setter
     def comment(self, comment):
-        self._comment = str(comment)
+        if comment is not None:
+            self._comment = str(comment)
+        else:
+            self._comment = None
 
     def __setitem__(self, key, value):
         if key is 'coodinate':

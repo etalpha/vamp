@@ -80,9 +80,9 @@ class Poscar(Frw):
             f.write(' '.join(atom['TF']))
             if atom.magmom is not None:
                 f.write(' !M '+str(atom.magmom))
-            if atom.belong:
+            if atom.belong is not None:
                 f.write(' !B '+str(atom.belong))
-            if atom.comment:
+            if atom.comment is not None:
                 f.write(' !C '+str(atom.comment))
             f.write('\n')
         f.close()
