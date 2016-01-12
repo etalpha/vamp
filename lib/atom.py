@@ -75,7 +75,7 @@ class Atom:
 
     @magmom.setter
     def magmom(self, magmom):
-        if isinstance(magmom, (int, float)):
+        if isinstance(magmom, (int, float, str)):
             self._magmom = float(magmom)
         elif magmom is None:
             self._magmom = None
@@ -156,7 +156,7 @@ class Atom:
     def __add__(self, other):
         ret = Atom(self)
         if type(other) in [list, tuple, np.ndarray]:
-            ret.coodinate += other
+            ret.coodinate += np.array(other)
         elif type(other) is Atom:
             ret.coodinate += other.coodinate
         return ret
@@ -169,8 +169,9 @@ class Atom:
     def transformed(self, matrix):
         ret = Atom(self)
         if type(matrix) in [list, tuple]:
-            matrix = np.array(matrix, float)
+            matrix = np.matrix(matrix, float)
         ret.coodinate = np.dot(matrix, ret.coodinate)
+        ret.coodinate = ret.coodinate[0]
         return ret
 
     def distance(self, other):

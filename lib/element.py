@@ -3,9 +3,9 @@ class Element:
     def __init__(self, element=None, num=None, LDAUL=None, LDAUU=None, LDAUJ=None):
         self._name = ''
         self._num = 0
-        self._LDAUL = None
-        self._LDAUU = None
-        self._LDAUJ = None
+        self._LDAUL = -1
+        self._LDAUU = 0.0
+        self._LDAUJ = 0.0
         if element:
             if type(element) == Element:
                 self.name = element.name

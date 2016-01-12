@@ -3,6 +3,7 @@ from vaspm.lib.poscar import Poscar
 from vaspm.lib.incar import Incar
 from vaspm.lib.doscar import Doscar
 from vaspm.lib.com import Com
+import numpy as np
 import os
 
 
@@ -19,6 +20,12 @@ class Vaspm:
         self.com = Com(self.info)
         self.incar = self.info.tags
         self.atoms = self.info.atoms
+
+    def read(self, adress):
+        if not os.path.isdir(adress):
+            raise RuntimeError('read argument must be directory')
+        self.read_poscar(adress)
+        self.read_incar(adress)
 
     def read_poscar(self, adress):
         if os.path.isfile(adress):
@@ -57,16 +64,43 @@ class Vaspm:
         self._doscar.read(DOSCAR)
 
     def translation(self, vector):
+        'translation'
         self.info.atoms.translation(vector)
 
     def transform(self, matrix):
+        'rotation'
         self.info.atoms.transform(matrix)
+
+    def rotation(self, vector, theta=None):
+        'Rodrigues\'s formula'
+        assert len(vector) == 3, 'vector must be 3dimension'
+        vec = np.array(vector)
+        if theta is None:
+            theta = np.linalg.norm(vec)
+        else:
+            vec = vec * theta / np.linalg.norm(vec)
+        vx = vec[0]
+        vy = vec[1]
+        vz = vec[2]
+        I = np.matrix(np.identity(3))
+        R = np.matrix((
+            (0, -vz, vy),
+            (vz, 0, -vx),
+            (-vy, vx, 0)))
+        M = I + R * np.sin(theta) / theta + R.dot(R) * (1-np.cos(theta)) / (theta**2)
+        self.transform(M)
 
     def set_magmom_pos_to_in(self):
         self.info.set_magmom_pos_to_in()
 
     def set_magmom_in_to_pos(self):
         self.info.set_magmom_in_to_pos()
+
+    def set_LDAU_tag_to_elem(self):
+        self.info.set_LDAU_tag_to_elem()
+
+    def set_LDAU_elem_to_tag(self):
+        self.info.set_LDAU_elem_to_tag()
 
     def __add__(self, other):
         info = self.info + other.info

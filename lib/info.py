@@ -77,7 +77,7 @@ class Info:
             raise RuntimeError('the number of LDAU is not consistent with POSCAR')
         if len(LDAUL) != len(self.elements):
             raise RuntimeError('the number of LDAU is not consistent with POSCAR')
-        for ldaul, ldauu, ldauj, element in zip(LDAUL, LDAUU, LDAUJ, self.elements):
+        for ldaul, ldauu, ldauj, element in zip(LDAUL, LDAUU, LDAUJ, self.elements.values()):
             element.LDAUL = ldaul
             element.LDAUU = ldauu
             element.LDAUJ = ldauj
@@ -86,10 +86,10 @@ class Info:
         ldaul = []
         ldauu = []
         ldauj = []
-        for element in self.elements:
-            ldaul.append(element.LDAUL)
-            ldauu.append(element.LDAUU)
-            ldauj.append(element.LDAUJ)
+        for element in self.elements.values():
+            ldaul.append(str(element.LDAUL))
+            ldauu.append(str(element.LDAUU))
+            ldauj.append(str(element.LDAUJ))
         self.tags['LDAUL'].val = ' '.join(ldaul)
         self.tags['LDAUU'].val = ' '.join(ldauu)
         self.tags['LDAUJ'].val = ' '.join(ldauj)
@@ -102,6 +102,10 @@ class Info:
         ret.set_magmom_pos_to_in()
         ret.atoms.sort('name')
         ret.elements = ret.atoms.create_elements()
+        for key, val in self.elements.items():
+            ret.elements[key] = val
+        for key, val in self.elements.items():
+            ret.elements[key] = val
         return ret
 
     def split(self):
