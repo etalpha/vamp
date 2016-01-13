@@ -76,6 +76,8 @@ class Info:
         if len(LDAUL) != len(LDAUU) or len(LDAUU) != len(LDAUJ):
             raise RuntimeError('the number of LDAU is not consistent with POSCAR')
         if len(LDAUL) != len(self.elements):
+            print(len(LDAUL))
+            print(len(self.elements))
             raise RuntimeError('the number of LDAU is not consistent with POSCAR')
         for ldaul, ldauu, ldauj, element in zip(LDAUL, LDAUU, LDAUJ, self.elements.values()):
             element.LDAUL = ldaul
@@ -99,7 +101,7 @@ class Info:
         add = copy.copy(other)
         for atom in add.atoms:
             ret.atoms.append(atom)
-        ret.set_magmom_pos_to_in()
+        # ret.set_magmom_pos_to_in()
         ret.atoms.sort('name')
         ret.elements = ret.atoms.create_elements()
         for key, val in self.elements.items():
@@ -110,16 +112,16 @@ class Info:
 
     def split(self):
         'This method returns splited dictionaty as info type'
-        self.set_magmom_in_to_pos()
-        self.set_LDAU_tag_to_elem()
+        # self.set_magmom_in_to_pos()
+        # self.set_LDAU_tag_to_elem()
         infos = dict()
         for atom in self.atoms:
             if atom.belong not in infos:
                 infos[atom.belong] = copy.deepcopy(self)
                 infos[atom.belong].atoms = Atoms()
             infos[atom.belong].atoms.append(atom)
-        self.set_magmom_pos_to_in()
-        self.set_LDAU_elem_to_tag()
+        # self.set_magmom_pos_to_in()
+        # self.set_LDAU_elem_to_tag()
         return infos
 
     @property
@@ -156,7 +158,7 @@ class Info:
 
     @property
     def selective_dynamics(self):
-        return self._selectice_dynamics
+        return self._selective_dynamics
 
     @selective_dynamics.setter
     def selective_dynamics(self, selective_dynamics):

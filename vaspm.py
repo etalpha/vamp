@@ -27,7 +27,7 @@ class Vaspm:
         self.read_poscar(adress)
         self.read_incar(adress)
 
-    def read_poscar(self, adress):
+    def read_poscar(self, adress='POSCAR'):
         if os.path.isfile(adress):
             self._poscar.read(adress)
         elif os.path.isdir(adress):
@@ -42,7 +42,7 @@ class Vaspm:
             adress = os.path.join(adress, 'POSCAR')
         self._poscar.write(adress)
 
-    def read_incar(self, adress):
+    def read_incar(self, adress='INCAR'):
         if os.path.isfile(adress):
             self._incar.read(adress)
         elif os.path.isdir(adress):
@@ -101,6 +101,17 @@ class Vaspm:
 
     def set_LDAU_elem_to_tag(self):
         self.info.set_LDAU_elem_to_tag()
+
+    def set_num(self):
+        for num, atom in enumerate(self.atoms):
+            atom.comment = atom.name + str(num + 1)
+
+    def get_belonginfo(self, other):
+        'get belonginfo from other'
+        if len(self.atoms) != len(other.atoms):
+            raise RuntimeError('number of atoms not consistant')
+        for atom, otom in zip(self.atoms, other.atoms):
+            atom.belong = other.belong
 
     def __add__(self, other):
         info = self.info + other.info
