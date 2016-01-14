@@ -111,7 +111,7 @@ class Vaspm:
         if len(self.atoms) != len(other.atoms):
             raise RuntimeError('number of atoms not consistant')
         for atom, otom in zip(self.atoms, other.atoms):
-            atom.belong = other.belong
+            atom.belong = otom.belong
 
     def __add__(self, other):
         info = self.info + other.info
