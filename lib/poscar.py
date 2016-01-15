@@ -11,18 +11,19 @@ class Poscar(Frw):
 
     def __add_atom(self, atom, line):
         # a = Atom(atom, line[0][0:3])
-        self.info.atoms.append(Atom(atom, line[0][0:3]))
+        newatom = Atom(atom, line[0][0:3])
         if len(line[0]) >= 6:
-            self.info.atoms[-1]['TF'] = line[0][3:6]
+            newatom.TF = line[0][3:6]
         if '!M' in line[1]:
-            self.info.atoms[-1]['m'] = line[
+            newatom.magmom = line[
                 1][line[1].index('!M') + 1]
         if '!B' in line[1]:
-            self.info.atoms[-1]['b'] = line[
+            newatom.belong = line[
                 1][line[1].index('!B') + 1]
         if '!C' in line[1]:
-            self.info.atoms[-1].comment = line[
+            newatom.comment = line[
                     1][line[1].index('!C') + 1]
+        self.info.atoms.append(newatom)
 
     def read(self, adress):
         self.start_reading(adress)
@@ -76,7 +77,7 @@ class Poscar(Frw):
         else:
             f.write('Direct\n')
         for atom in self.info.atoms:
-            f.write(self.array_to_f(atom.coodinate) + ' ')
+            f.write(self.array_to_f(atom.coordinate) + ' ')
             f.write(' '.join(atom['TF']))
             if atom.magmom is not None:
                 f.write(' !M '+str(atom.magmom))

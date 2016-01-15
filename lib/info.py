@@ -8,6 +8,7 @@ from collections import OrderedDict
 import re
 import copy
 
+
 class Info:
 
     def __init__(self, info=None):
@@ -21,12 +22,12 @@ class Info:
         self._tags = OrderedDict()
         if info:
             if type(info) == Info:
-                    self.__dict__ = copy.deepcopy(info.__dict__)
+                self.__dict__ = copy.deepcopy(info.__dict__)
             else:
                 raise TypeError
 
-    def add_atom(self, name, coodinate=(0,0,0), TF=(True,True,True), magmom=None, belong=None):
-        self.atoms.append(Atom(name, coodinate, TF, magmom, belong))
+    def add_atom(self, name, coordinate=(0, 0, 0), TF=(True, True, True), magmom=None, belong=None):
+        self.atoms.append(Atom(name, coordinate, TF, magmom, belong))
 
     def add_element(self, name, num, LUAUL=None, LUAUU=None, LUAUJ=None):
         self.elements[name] = Element(name, num, LUAUL, LUAUU, LUAUJ)
@@ -39,7 +40,7 @@ class Info:
         for atom in self.atoms:
             lis.append(atom['m'])
         lis2 = []
-        lis2.append([0,lis[0]])
+        lis2.append([0, lis[0]])
         for mag in lis:
             if lis2[-1][1] == mag:
                 lis2[-1][0] += 1
@@ -70,15 +71,23 @@ class Info:
                 atom.magmom = mag
 
     def set_LDAU_tag_to_elem(self):
+        if 'LDAUL' in self.tags:
+            return self
+        if 'LDAUU' in self.tags:
+            return self
+        if 'LDAUJ' in self.tags:
+            return self
         LDAUL = list(map(float, re.split('\s+', self.tags['LDAUL'].val)))
         LDAUU = list(map(float, re.split('\s+', self.tags['LDAUU'].val)))
         LDAUJ = list(map(float, re.split('\s+', self.tags['LDAUJ'].val)))
         if len(LDAUL) != len(LDAUU) or len(LDAUU) != len(LDAUJ):
-            raise RuntimeError('the number of LDAU is not consistent with POSCAR')
+            raise RuntimeError(
+                'the number of LDAU is not consistent with POSCAR')
         if len(LDAUL) != len(self.elements):
             print(len(LDAUL))
             print(len(self.elements))
-            raise RuntimeError('the number of LDAU is not consistent with POSCAR')
+            raise RuntimeError(
+                'the number of LDAU is not consistent with POSCAR')
         for ldaul, ldauu, ldauj, element in zip(LDAUL, LDAUU, LDAUJ, self.elements.values()):
             element.LDAUL = ldaul
             element.LDAUU = ldauu
@@ -112,17 +121,28 @@ class Info:
 
     def split(self):
         'This method returns splited dictionaty as info type'
-        # self.set_magmom_in_to_pos()
-        # self.set_LDAU_tag_to_elem()
+        if 'MAGMOM' in self.info.tags:
+            self.set_magmom_in_to_pos()
+        if 'LDAUJ' in self.info.tags:
+            self.set_LDAU_tag_to_elem()
         infos = dict()
         for atom in self.atoms:
-            if atom.belong not in infos:
+            if atom.belong not in infos.keys():
                 infos[atom.belong] = copy.deepcopy(self)
                 infos[atom.belong].atoms = Atoms()
-            infos[atom.belong].atoms.append(atom)
-        # self.set_magmom_pos_to_in()
-        # self.set_LDAU_elem_to_tag()
+            infos[atom.belong].atoms.append(Atom(atom))
+        if 'MAGMOM' in self.info.tags:
+            self.set_magmom_pos_to_in()
+        if 'LDAUJ' in self.info.tags:
+            self.set_LDAU_elem_to_tag()
         return infos
+
+    def cartesianyzation(self):
+        if self.cartesian == True:
+            return self
+        else:
+            self.atoms.cartesianyzation(self.lattice)
+            self.cartesian = True
 
     @property
     def atoms(self):
@@ -179,4 +199,3 @@ class Info:
     @tags.setter
     def tags(self, tags):
         self._tags = tags
-

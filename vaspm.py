@@ -9,23 +9,35 @@ import os
 
 class Vaspm:
 
-    def __init__(self, info=None):
-        if info:
-            self.info = info
+    def __init__(self, *args):
+        if isinstance(args[0], Info):
+            self.info = args[0]
         else:
             self.info = Info()
         self._poscar = Poscar(self.info)
         self._incar = Incar(self.info)
         self._doscar = Doscar(self.info)
         self.com = Com(self.info)
-        self.incar = self.info.tags
+        self.tags = self.info.tags
         self.atoms = self.info.atoms
+        for arg in args:
+            if isinstance(arg, str):
+                self.read(arg)
 
-    def read(self, adress):
-        if not os.path.isdir(adress):
-            raise RuntimeError('read argument must be directory')
-        self.read_poscar(adress)
-        self.read_incar(adress)
+    def read(self, *args):
+        for arg in args:
+            if os.path.isdir(arg):
+                self.read_poscar(arg)
+                self.read_incar(arg)
+            else:
+                if 'POSCAR' in arg:
+                    self.read_poscar(arg)
+                elif 'INCAR' in arg:
+                    self.read_incar(arg)
+
+    def write(self, num):
+        self.write_poscar('POSCAR' + num)
+        self.write_incar('INCAR' + num)
 
     def read_poscar(self, adress='POSCAR'):
         if os.path.isfile(adress):
@@ -63,32 +75,22 @@ class Vaspm:
     def read_PDOS(self, DOSCAR):
         self._doscar.read(DOSCAR)
 
-    def translation(self, vector):
+    def translation(self, vector, belong=None):
         'translation'
-        self.info.atoms.translation(vector)
+        self.info.atoms.translation(vector, belong)
 
-    def transform(self, matrix):
+    def transform(self, matrix, belong=None):
         'rotation'
-        self.info.atoms.transform(matrix)
+        self.info.atoms.transform(matrix, belong)
 
-    def rotation(self, vector, theta=None):
-        'Rodrigues\'s formula'
-        assert len(vector) == 3, 'vector must be 3dimension'
-        vec = np.array(vector)
-        if theta is None:
-            theta = np.linalg.norm(vec)
-        else:
-            vec = vec * theta / np.linalg.norm(vec)
-        vx = vec[0]
-        vy = vec[1]
-        vz = vec[2]
-        I = np.matrix(np.identity(3))
-        R = np.matrix((
-            (0, -vz, vy),
-            (vz, 0, -vx),
-            (-vy, vx, 0)))
-        M = I + R * np.sin(theta) / theta + R.dot(R) * (1-np.cos(theta)) / (theta**2)
-        self.transform(M)
+    def rotation(self, axis, center, theta=None, belong=None):
+        '''Using Rodrigues\'s formula
+        axis is rotation axis.
+        center is rotation center.
+        theta is rotation angle.
+        If you specify belong, it rotate atoms which belong to
+        your specify.'''
+        self.info.atoms.rotation(axis, center, theta, belong)
 
     def set_magmom_pos_to_in(self):
         self.info.set_magmom_pos_to_in()
@@ -120,11 +122,14 @@ class Vaspm:
 
     def split(self):
         infos = self.info.split()
-        print(infos)
+        # print(infos)
         ret = dict()
         for bel, info in infos.items():
             ret[bel] = Vaspm(info)
         return ret
+
+    def cartesianyzation(self):
+        self.info.cartesianyzation()
 
     def set_belong(self, name=None):
         if name is None:

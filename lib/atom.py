@@ -5,9 +5,9 @@ import copy
 class Atom:
 
     # str and Atom are allowed as atom
-    def __init__(self, atom=None, coodinate=None, TF=None, magmom=0, belong=None):
+    def __init__(self, atom=None, coordinate=None, TF=None, magmom=0, belong=None):
         self._name = None
-        self._coodinate = np.array([0.0, 0.0, 0.0])
+        self._coordinate = np.array([0.0, 0.0, 0.0])
         self._TF = np.array([True, True, True])
         self._magmom = 0
         self._belong = None
@@ -20,8 +20,8 @@ class Atom:
                 self.__dict__ = copy.deepcopy(atom.__dict__)
             else:
                 raise TypeError('atom must be Atom or str')
-        if coodinate:
-            self.coodinate = np.array(coodinate, float)
+        if coordinate:
+            self.coordinate = np.array(coordinate, float)
         if TF:
             self.TF = np.array(TF, bool)
         if magmom:
@@ -42,15 +42,15 @@ class Atom:
         self._name = str(name)
 
     @property
-    def coodinate(self):
-        return self._coodinate
+    def coordinate(self):
+        return self._coordinate
 
-    @coodinate.setter
-    def coodinate(self, coodinate):
-        if isinstance(coodinate, (list, tuple, np.ndarray)):
-            self._coodinate = np.array(coodinate, float)
+    @coordinate.setter
+    def coordinate(self, coordinate):
+        if isinstance(coordinate, (list, tuple, np.ndarray)):
+            self._coordinate = np.array(coordinate, float)
         else:
-            raise TypeError('coodinate must be an iterable')
+            raise TypeError('coordinate must be an iterable')
 
     @property
     def TF(self):
@@ -105,18 +105,18 @@ class Atom:
             self._comment = None
 
     def __setitem__(self, key, value):
-        if key is 'coodinate':
-            self.coodinate = np.array(value, dtype=float)
+        if key is 'coordinate':
+            self.coordinate = np.array(value, dtype=float)
         elif key is 'TF':
             self.TF = value
         elif key is 'name':
             self.name = str(value)
         elif key is 'x':
-            self.coodinate[0] = float(value)
+            self.coordinate[0] = float(value)
         elif key is 'y':
-            self.coodinate[1] = float(value)
+            self.coordinate[1] = float(value)
         elif key is 'z':
-            self.coodinate[2] = float(value)
+            self.coordinate[2] = float(value)
         elif key in ('m', 'M'):
             self.magmom = float(value)
         elif key in ('b', 'B'):
@@ -126,18 +126,18 @@ class Atom:
         return None
 
     def __getitem__(self, key):
-        if key is 'coodinate':
-            return self.coodinate
+        if key is 'coordinate':
+            return self.coordinate
         elif key is 'TF':
             return self.TF
         elif key is 'name':
             return self.name
         elif key is 'x':
-            return self.coodinate[0]
+            return self.coordinate[0]
         elif key is 'y':
-            return self.coodinate[1]
+            return self.coordinate[1]
         elif key is 'z':
-            return self.coodinate[2]
+            return self.coordinate[2]
         elif key is 'm':
             return self.magmom
         elif key is 'b':
@@ -150,15 +150,15 @@ class Atom:
 
     def __neg__(self):
         ret = Atom(self)
-        ret.coodinate = -(ret.coodinate)
+        ret.coordinate = -(ret.coordinate)
         return ret
 
     def __add__(self, other):
         ret = Atom(self)
         if type(other) in [list, tuple, np.ndarray]:
-            ret.coodinate += np.array(other)
+            ret.coordinate += np.array(other)
         elif type(other) is Atom:
-            ret.coodinate += other.coodinate
+            ret.coordinate += other.coordinate
         return ret
 
     def __sub__(self, other):
@@ -170,22 +170,50 @@ class Atom:
         ret = Atom(self)
         if type(matrix) in [list, tuple]:
             matrix = np.matrix(matrix, float)
-        ret.coodinate = np.dot(matrix, ret.coodinate)
-        ret.coodinate = ret.coodinate[0]
+        ret.coordinate = np.dot(matrix, ret.coordinate)
+        ret.coordinate = ret.coordinate[0]
         return ret
 
     def distance(self, other):
-        vec = self.coodinate - other.coodinate
+        vec = self.coordinate - other.coordinate
         return np.linalg.norm(vec)
 
     def __iadd__(self, other):
-        self.coodinate = (self + other).coodinate
+        self.coordinate = (self + other).coordinate
 
     def __isub__(self, other):
-        self.coodinate = (self - other).coodinate
+        self.coordinate = (self - other).coordinate
 
     def transform(self, matrix):
-        self.coodinate = self.transformed(matrix).coodinate
+        self.coordinate = self.transformed(matrix).coordinate
+
+    def rotation(self, axis, center, theta=None):
+        'Rodrigues\'s formula'
+        assert len(axis) == 3, 'vector must be 3dimension'
+        vec = np.array(axis)
+        cen = np.array(center)
+        vec = vec - cen
+        if theta is None:
+            theta = np.linalg.norm(vec)
+        else:
+            vec = vec * theta / np.linalg.norm(vec)
+        vx = vec[0]
+        vy = vec[1]
+        vz = vec[2]
+        I = np.matrix(np.identity(3))
+        R = np.matrix((
+            (0, -vz, vy),
+            (vz, 0, -vx),
+            (-vy, vx, 0)))
+        M = I + R * np.sin(theta) / theta + R.dot(R) * (1-np.cos(theta)) / (theta**2)
+        self.transform(M)
+        self.coordinate += cen
+
+    def cartesianyzation(self, lattice):
+        tmp = np.array([0., 0., 0.])
+        for i in range(3):
+            tmp += lattice[i] * self.coordinate[i]
+        self.coordinate = tmp
 
 # a = Atom('Au', (1, 1, 1), (False, True, True))
 # print(a.TF)
@@ -195,5 +223,5 @@ class Atom:
 #     print(k,v)
 # A = [[0, 0, 1], [0, 1, 0], [1, 0, 0]]
 # c = b.transform(A)
-# print(c.coodinate)
+# print(c.coordinate)
 # print(c.distance(a)**2)

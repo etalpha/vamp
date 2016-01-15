@@ -32,19 +32,31 @@ class Atoms(list):
             elements.add_atom(atom.name)
         return elements
 
-    def translation(self, vector):
+    def translation(self, vector, belong=None):
         for atom in self:
-            atom += vector
+            if belong is None or atom.belong == belong:
+                atom += vector
 
-    def transform(self, matrix):
+    def transform(self, matrix, belong=None):
         for atom in self:
-            atom.transform(matrix)
+            if belong is None or atom.belong == belong:
+                atom.transform(matrix)
+
+    def rotation(self, axis, point, theta=None, belong=None):
+        for atom in self:
+            if belong is None or atom.belong == belong:
+                atom.rotation(axis, point, theta)
+
+    def cartesianyzation(self, lattice):
+        for atom in self:
+            atom.cartesianyzation(lattice)
 
     def set_belong(self, name):
         for atom in self:
             atom['b'] = name
 
-    # def __getitem__(self, key):
-    #     if isinstance(key,(int)):
-    #         pass
-    #
+    def __getitem__(self, key):
+        return list.__getitem__(self, key + 1)
+
+    def __setitem__(self, key, val):
+        list.__setitem__(self, key + 1, val)
