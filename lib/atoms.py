@@ -55,8 +55,12 @@ class Atoms(list):
         for atom in self:
             atom['b'] = name
 
+    def reverse_mag(self):
+        for atom in self:
+            atom.magmom = -atom.magmom
+
     def __getitem__(self, key):
-        return list.__getitem__(self, key + 1)
+        return list.__getitem__(self, key - 1)
 
     def __setitem__(self, key, val):
-        list.__setitem__(self, key + 1, val)
+        list.__setitem__(self, key - 1, val)

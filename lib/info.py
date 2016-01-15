@@ -121,9 +121,9 @@ class Info:
 
     def split(self):
         'This method returns splited dictionaty as info type'
-        if 'MAGMOM' in self.info.tags:
+        if 'MAGMOM' in self.tags:
             self.set_magmom_in_to_pos()
-        if 'LDAUJ' in self.info.tags:
+        if 'LDAUJ' in self.tags:
             self.set_LDAU_tag_to_elem()
         infos = dict()
         for atom in self.atoms:
@@ -131,9 +131,9 @@ class Info:
                 infos[atom.belong] = copy.deepcopy(self)
                 infos[atom.belong].atoms = Atoms()
             infos[atom.belong].atoms.append(Atom(atom))
-        if 'MAGMOM' in self.info.tags:
+        if 'MAGMOM' in self.tags:
             self.set_magmom_pos_to_in()
-        if 'LDAUJ' in self.info.tags:
+        if 'LDAUJ' in self.tags:
             self.set_LDAU_elem_to_tag()
         return infos
 
@@ -143,6 +143,13 @@ class Info:
         else:
             self.atoms.cartesianyzation(self.lattice)
             self.cartesian = True
+
+    def reverse_mag(self):
+        self.set_magmom_in_to_pos()
+        self.set_LDAU_tag_to_elem()
+        self.atoms.reverse_mag()
+        self.set_magmom_pos_to_in()
+        self.set_LDAU_elem_to_tag()
 
     @property
     def atoms(self):

@@ -5,12 +5,12 @@ from vaspm.lib.doscar import Doscar
 from vaspm.lib.com import Com
 import numpy as np
 import os
-
+#I have to clean up read and write method
 
 class Vaspm:
 
     def __init__(self, *args):
-        if isinstance(args[0], Info):
+        if len(args) != 0 and isinstance(args[0], Info):
             self.info = args[0]
         else:
             self.info = Info()
@@ -25,6 +25,8 @@ class Vaspm:
                 self.read(arg)
 
     def read(self, *args):
+        if len(args) == 0:
+            args = ('.')
         for arg in args:
             if os.path.isdir(arg):
                 self.read_poscar(arg)
@@ -36,8 +38,14 @@ class Vaspm:
                     self.read_incar(arg)
 
     def write(self, num):
+        num = str(num)
         self.write_poscar('POSCAR' + num)
         self.write_incar('INCAR' + num)
+
+    def make(self, dir_name):
+        os.mkdir(dir_name)
+        self.write_poscar(os.path.join(dir_name, 'POSCAR'))
+        self.write_incar(os.path.join(dir_name, 'INCAR'))
 
     def read_poscar(self, adress='POSCAR'):
         if os.path.isfile(adress):
@@ -130,6 +138,9 @@ class Vaspm:
 
     def cartesianyzation(self):
         self.info.cartesianyzation()
+
+    def reverse_mag(self):
+        self.info.reverse_mag()
 
     def set_belong(self, name=None):
         if name is None:
