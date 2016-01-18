@@ -24,18 +24,18 @@ class Vaspm:
             if isinstance(arg, str):
                 self.read(arg)
 
-    def read(self, *args):
-        if len(args) == 0:
-            args = ('.')
-        for arg in args:
-            if os.path.isdir(arg):
-                self.read_poscar(arg)
-                self.read_incar(arg)
+    def read(self, adress='.'):
+        if os.path.isdir(adress):
+            self.read_poscar(adress)
+            self.read_incar(adress)
+        else:
+            if 'POSCAR' in adress:
+                self.read_poscar(adress)
+            elif 'INCAR' in adress:
+                self.read_incar(adress)
             else:
-                if 'POSCAR' in arg:
-                    self.read_poscar(arg)
-                elif 'INCAR' in arg:
-                    self.read_incar(arg)
+                self.read_poscar(os.path.join('POSCAR', adress))
+                self.read_incar(os.path.join('INCAR', adress))
 
     def write(self, num):
         num = str(num)
