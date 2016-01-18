@@ -189,7 +189,7 @@ class Info:
 
     @selective_dynamics.setter
     def selective_dynamics(self, selective_dynamics):
-        self._selectice_dynamics = selective_dynamics
+        self._selective_dynamics = selective_dynamics
 
     @property
     def cartesian(self):

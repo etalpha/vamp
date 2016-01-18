@@ -31,16 +31,27 @@ class Vaspm:
             if os.path.isdir(arg):
                 self.read_poscar(arg)
                 self.read_incar(arg)
+            elif isinstance(arg, int):
+                self.read_poscar('POSCAR' + str(arg))
+                self.read_incar('INCAR' + str(arg))
             else:
                 if 'POSCAR' in arg:
                     self.read_poscar(arg)
                 elif 'INCAR' in arg:
                     self.read_incar(arg)
 
-    def write(self, num):
-        num = str(num)
-        self.write_poscar('POSCAR' + num)
-        self.write_incar('INCAR' + num)
+    def write(self, mark):
+        if isinstance(mark, int):
+            num = str(mark)
+            pos = 'POSCAR' + num
+            inc = 'INCAR' + num
+        elif os.path.isdir(mark):
+            pos = os.path.join(mark, 'POSCAR')
+            inc = os.path.join(mark, 'INCAR')
+        else:
+            raise RuntimeError
+        self.write_poscar(pos)
+        self.write_incar(inc)
 
     def make(self, dir_name):
         os.mkdir(dir_name)
