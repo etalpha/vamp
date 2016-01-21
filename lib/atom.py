@@ -184,6 +184,9 @@ class Atom:
     def __isub__(self, other):
         self.coordinate = (self - other).coordinate
 
+    def translation(self, vector):
+        self.coordinate += vector
+
     def transform(self, matrix):
         self.coordinate = self.transformed(matrix).coordinate
 

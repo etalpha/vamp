@@ -35,7 +35,7 @@ class Atoms(list):
     def translation(self, vector, belong=None):
         for atom in self:
             if belong is None or atom.belong == belong:
-                atom += vector
+                atom.translation(vector)
 
     def transform(self, matrix, belong=None):
         for atom in self:

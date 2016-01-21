@@ -10,8 +10,6 @@ class Elements(OrderedDict):
             if type(elements) == Elements:
                 for key, val in elements.items:
                     self[key] = Element(val)
-            else:
-                raise TypeError
 
     def add_atom(self, name):
         if name not in self:
@@ -34,14 +32,29 @@ class Elements(OrderedDict):
             lis.append(str(int(elem.num)))
         return lis
 
+    def merge(self, other):
+        for elem in other:
+            if elem not in self:
+                self[elem] = Element(other[elem])
+            else:
+                self[elem].num += other[elem].num
+        tmp_dic = OrderedDict(sorted(self.items()))
+        self.clear()
+        for key, val in tmp_dic.items():
+            self[key] = val
 
 # a = Elements()
-# a.add_element('Au')
-# a.add_element('Au')
-# a.add_element('Ag')
-# a.add_element('Au')
+# a.add_atom('Au')
+# a.add_atom('Au')
+# a.add_atom('U')
+# a.add_atom('Ag')
+# a.add_atom('Au')
 #
-# b = a.element_list()
-# for i in b:
-#     print(i.name)
-#     print(i.num)
+# b = Elements()
+# b.add_atom('Au')
+# b.add_atom('Cu')
+#
+# a.merge(b)
+# for elem in a:
+#     print(elem)
+#     print(a[elem].num)

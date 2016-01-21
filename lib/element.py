@@ -7,15 +7,16 @@ class Element:
         self._LDAUU = 0.0
         self._LDAUJ = 0.0
         if element:
-            if type(element) == Element:
+            if isinstance(element, Element):
                 self.name = element.name
                 self.num = element.num
-                self.LUAUJ = element.LUAUJ
-                self.LUAUL = element.LUAUL
-                self.LUAUU = element.LUAUU
-            if type(element) == str:
+                self.LDAUJ = element.LDAUJ
+                self.LDAUL = element.LDAUL
+                self.LDAUU = element.LDAUU
+            elif isinstance(element, str):
                 self.name = element
             else:
+                print(element.name)
                 raise TypeError
         if num:
             if type(num) in (int, str):

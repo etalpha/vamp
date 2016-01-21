@@ -18,7 +18,6 @@ class Info:
         self._lattice = []
         self._selective_dynamics = False
         self._cartesian = False
-        # self.incar = OrderedDict()
         self._tags = OrderedDict()
         if info:
             if type(info) == Info:
@@ -49,7 +48,6 @@ class Info:
         lis3 = []
         for item in lis2:
             lis3.append('*'.join(map(str, item)))
-        # self.incar['MAGMOM'] = ' '.join(map(str, lis))
         self.tags['MAGMOM'].val = ' '.join(lis3)
 
     def set_magmom_in_to_pos(self):
@@ -112,11 +110,7 @@ class Info:
             ret.atoms.append(atom)
         # ret.set_magmom_pos_to_in()
         ret.atoms.sort('name')
-        ret.elements = ret.atoms.create_elements()
-        for key, val in self.elements.items():
-            ret.elements[key] = val
-        for key, val in self.elements.items():
-            ret.elements[key] = val
+        ret.elements.merge(add)
         return ret
 
     def split(self):
