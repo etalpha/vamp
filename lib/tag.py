@@ -3,10 +3,10 @@ import re
 
 class Tag:
 
-    def __init__(self):
+    def __init__(self, key="", val=""):
         self._comment_out = False
-        self._key = ""
-        self._val = ""
+        self._key = key
+        self._val = val
         self._comment = None
 
     def readline_incar(self, line):

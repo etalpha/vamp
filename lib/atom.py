@@ -12,6 +12,7 @@ class Atom:
         self._magmom = 0
         self._belong = None
         self._comment = None
+        self._augmentation = None
         self._pdos = None
         if atom:
             if isinstance(atom, str):
@@ -103,6 +104,17 @@ class Atom:
             self._comment = str(comment)
         else:
             self._comment = None
+
+    @property
+    def augmentation(self):
+        return self._augmentation
+
+    @augmentation.setter
+    def augmentation(self, augmentation):
+        if augmentation is not None:
+            self._augmentation = augmentation
+        else:
+            self._augmentation = None
 
     def __setitem__(self, key, value):
         if key is 'coordinate':

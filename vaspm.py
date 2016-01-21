@@ -3,6 +3,7 @@ from vaspm.lib.poscar import Poscar
 from vaspm.lib.incar import Incar
 from vaspm.lib.doscar import Doscar
 from vaspm.lib.com import Com
+from vaspm.lib.chgcar import Chgcar
 import numpy as np
 import os
 #I have to clean up read and write method
@@ -17,6 +18,7 @@ class Vaspm:
         self._poscar = Poscar(self.info)
         self._incar = Incar(self.info)
         self._doscar = Doscar(self.info)
+        self._chgcar = Chgcar(self.info)
         self.com = Com(self.info)
         self.tags = self.info.tags
         self.atoms = self.info.atoms
@@ -87,6 +89,12 @@ class Vaspm:
         if os.path.isdir(adress):
             adress = os.path.join(adress, 'INCAR')
         self._incar.write(adress)
+
+    def read_chgcar(self, adress):
+        self._chgcar.read(adress)
+
+    def write_chgcar(self, adress):
+        raise NotImplementedError
 
     def read_com(self, adress):
         self.com.read(adress)
