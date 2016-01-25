@@ -19,6 +19,9 @@ class Info:
         self._selective_dynamics = False
         self._cartesian = False
         self._tags = OrderedDict()
+        self._chgsum = None
+        self._chgdif = None
+        self._chgcell = None
         if info:
             if type(info) == Info:
                 self.__dict__ = copy.deepcopy(info.__dict__)
@@ -105,12 +108,12 @@ class Info:
 
     def __add__(self, other):
         ret = copy.deepcopy(self)
-        add = copy.copy(other)
-        for atom in add.atoms:
-            ret.atoms.append(atom)
-        # ret.set_magmom_pos_to_in()
-        ret.atoms.sort('name')
-        ret.elements.merge(add)
+        ret.atoms.merge(other.atoms)
+        ret.elements.merge(other.elements)
+        if ret.chgsum:
+            ret.chgsum += other.chgsum
+        if ret.chgdif:
+            ret.chgdif += other.chgdif
         return ret
 
     def split(self):
@@ -191,7 +194,15 @@ class Info:
 
     @cartesian.setter
     def cartesian(self, cartesian):
-        self._cartesian = cartesian
+        if type(cartesian) == bool:
+            self._cartesian = cartesian
+        elif isinstance(cartesian, str):
+            if cartesian[0] in ('c', 'C'):
+                self._cartesian = True
+            else:
+                self._cartesian = False
+        else:
+            raise TypeError
 
     @property
     def tags(self):
@@ -200,3 +211,29 @@ class Info:
     @tags.setter
     def tags(self, tags):
         self._tags = tags
+
+    @property
+    def chgsum(self):
+        return self._chgsum
+
+    @chgsum.setter
+    def chgsum(self, chgsum):
+        self._chgsum = list(map(float, chgsum))
+        self._chgsum = np.array(self._chgsum)
+
+    @property
+    def chgdif(self):
+        return self._chgdif
+
+    @chgdif.setter
+    def chgdif(self, chgdif):
+        self._chgdif = list(map(float, chgdif))
+        self._chgdif = np.array(self._chgdif)
+
+    @property
+    def chgcell(self):
+        return self._chgcell
+
+    @chgcell.setter
+    def chgcell(self, chgcell):
+        self._chgcell = chgcell

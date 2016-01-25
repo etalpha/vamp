@@ -6,6 +6,9 @@ class Frw:  # super class of all read/write class.
     def __init__(self, info, adress=None):
         self.info = info
 
+    def cast_line(self):
+        raise NotImplementedError
+
     def start_reading(self, adress):
         self.f = open(adress, 'r')
 

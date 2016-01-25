@@ -25,6 +25,11 @@ class Atoms(list):
             x[key1], x[key2], x[key3], x[key4], x[key5], x[key6]))
         return self
 
+    def merge(self, other):
+        for atom in other:
+            self.append(Atom(atom))
+        self.sort('name')
+
     def create_elements(self):
         self.sort()
         elements = Elements()

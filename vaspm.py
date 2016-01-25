@@ -94,7 +94,7 @@ class Vaspm:
         self._chgcar.read(adress)
 
     def write_chgcar(self, adress):
-        raise NotImplementedError
+        self._chgcar.write(adress)
 
     def read_com(self, adress):
         self.com.read(adress)
