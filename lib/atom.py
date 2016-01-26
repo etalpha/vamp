@@ -14,7 +14,7 @@ class Atom:
         self._comment = None
         self._augsum = None
         self._augdif = None
-        self._chgn = None
+        self._chgn = '0.0'
         self._pdos = None
         if atom:
             if isinstance(atom, str):

@@ -33,9 +33,13 @@ class Vaspm:
             if os.path.isdir(arg):
                 self.read_poscar(arg)
                 self.read_incar(arg)
+                self.set_magmom_in_to_pos()
+                self.set_LDAU_tag_to_elem()
             elif isinstance(arg, int):
                 self.read_poscar('POSCAR' + str(arg))
                 self.read_incar('INCAR' + str(arg))
+                self.set_magmom_in_to_pos()
+                self.set_LDAU_tag_to_elem()
             else:
                 if 'POSCAR' in arg:
                     self.read_poscar(arg)
@@ -52,6 +56,8 @@ class Vaspm:
             inc = os.path.join(mark, 'INCAR')
         else:
             raise RuntimeError
+        self.set_magmom_pos_to_in()
+        self.set_LDAU_elem_to_tag()
         self.write_poscar(pos)
         self.write_incar(inc)
 
@@ -91,6 +97,8 @@ class Vaspm:
         self._incar.write(adress)
 
     def read_chgcar(self, adress):
+        if os.path.isdir(adress):
+            adress = os.path.join(adress, 'CHGCAR')
         self._chgcar.read(adress)
 
     def write_chgcar(self, adress):

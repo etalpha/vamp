@@ -3,6 +3,7 @@ from .tag import Tag
 from .atom import Atom
 from .element import Element
 import re
+import numpy as np
 
 
 class Chgcar(Frw):
@@ -24,17 +25,16 @@ class Chgcar(Frw):
         for name, num in zip(names, nums):
             self.info.elements[name] = Element(name, num)
         self.info.cartesian = self.nextline()[0]
-        print(self.info.cartesian)
         for key, val in self.info.elements.items():
             for i in range(1, val.num + 1):
-                self.info.atoms.append(Atom(key, self.nextline()))
+                a = self.nextline()
+                self.info.atoms.append(Atom(key, a))
         self.nextline()
         cells = self.nextline()
         cells = list(map(int, cells))
         self.info.chgcell = cells
         ncell = cells[0] * cells[1] * cells[2]
         chgs = []
-        print(ncell)
         for i in range(int(ncell / 5) + 1):
             chgs += self.nextline()
         self.info.chgsum = chgs
@@ -42,19 +42,21 @@ class Chgcar(Frw):
         for atom in self.info.atoms:
             chgs = []
             ncell = int(self.nextline()[3])
-            for i in range(int(ncell / 5) + 1):
+            for i in range(int(ncell / 5) + (0 if ncell % 5 == 0 else 1)):
                 chgs += self.nextline()
             atom.augsum = chgs
         chgn = []
         for i in range(int(len(self.info.atoms) / 5 + 1)):
-            chgn += self.nextline()
+            n = self.nextline()
+            if n is None:
+                return None
+            chgn += n
         for n, atom in zip(chgn, self.info.atoms):
             atom.chgn = n
         cells = self.nextline()
         cells = list(map(int, cells))
         ncell = cells[0] * cells[1] * cells[2]
         chgs = []
-        print(ncell)
         for i in range(int(ncell / 5) + 1):
             chgs += self.nextline()
         self.info.chgdif = chgs
@@ -69,54 +71,68 @@ class Chgcar(Frw):
     def write(self, adress):
         f = open(adress, 'w')
         f.write(self.info.tags['SYSTEM'].val + '\n')
-        f.write(self.info.unit + '\n')
+        f.write('   ' + '{0:<16.14f}'.format(float(self.info.unit)).zfill(16)+ '\n')
+
         for lat in self.info.lattice:
-            f.write(' '.join(lat) + '\n')
+            f.write(' ')
+            for num in lat:
+                f.write(' ' + '{0:11.6f}'.format(float(num)))
+            f.write('\n')
+
         for key in self.info.elements.keys():
-            f.write(key + ' ')
+            f.write('{0:>4s}'.format(key) + ' ')
         f.write('\n')
+
         for val in self.info.elements.values():
-            f.write(str(val.num) + ' ')
+            f.write('{0:>6d}'.format(val.num))
         f.write('\n')
         if self.info.cartesian is False:
             f.write('Direct')
         else:
             f.write('Cartesian')
         f.write('\n')
+
         for atom in self.info.atoms:
-            f.write(' '.join(map(str, atom.coordinate)) + '\n')
+            for num in atom.coordinate:
+                f.write(' ' + '{0:9.6f}'.format(num))
+            f.write('\n')
         f.write('\n')
-        f.write(' '.join(map(str, self.info.chgcell)) + '\n')
+
+        for num in self.info.chgcell:
+            f.write(' ' + '{0:>4d}'.format(num))
         for i, chg in enumerate(self.info.chgsum):
-            f.write(str(chg) + ' ')
-            if i % 5 == 4:
+            if i % 5 == 0:
                 f.write('\n')
+            f.write(' ' + '{0: 18.11E}'.format(chg))
         for i, atom in enumerate(self.info.atoms):
-            f.write('\naugmentation occupancies   ')
-            f.write(str(i + 1) + ' ')
-            f.write(str(len(atom.augsum)) + '\n')
+            f.write('\n')
+            f.write('augmentation occupancies')
+            f.write(' ' + '{0:3d}'.format(i + 1))
+            f.write(' ' + '{0:3d}'.format(len(atom.augsum)))
             for j, augsum in enumerate(atom.augsum):
-                f.write(str(augsum))
-                f.write(' ')
-                if j % 5 == 4:
+                if j % 5 == 0:
                     f.write('\n')
-        f.write('\n')
+                f.write(' ' + '{0: 13.7E}'.format(float(augsum)))
+
         for i, atom in enumerate(self.info.atoms):
-            f.write(atom.chgn + ' ')
-            if i % 5 == 4:
+            if i % 5 == 0:
                 f.write('\n')
+            f.write(' ' + '{0: 18.12E}'.format(float(atom.chgn)))
         f.write('\n')
-        f.write(' '.join(map(str, self.info.chgcell)) + '\n')
+
+        for num in self.info.chgcell:
+            f.write(' ' + '{0:>4d}'.format(num))
         for i, chg in enumerate(self.info.chgdif):
-            f.write(str(chg) + ' ')
-            if i % 5 == 4:
+            if i % 5 == 0:
                 f.write('\n')
+            f.write(' ' + '{0: 18.11E}'.format(chg))
+        f.write('\n')
         for i, atom in enumerate(self.info.atoms):
-            f.write('\naugmentation occupancies   ')
-            f.write(str(i + 1) + ' ')
-            f.write(str(len(atom.augdif)) + '\n')
+            f.write('augmentation occupancies')
+            f.write(' ' + '{0:3d}'.format(i + 1))
+            f.write(' ' + '{0:3d}'.format(len(atom.augdif)))
             for j, augdif in enumerate(atom.augdif):
-                f.write(str(augdif))
-                f.write(' ')
-                if j % 5 == 4:
+                if j % 5 == 0:
                     f.write('\n')
+                f.write(' ' + '{0: 13.7E}'.format(float(augdif)))
+            f.write('\n')

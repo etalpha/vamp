@@ -72,11 +72,11 @@ class Info:
                 atom.magmom = mag
 
     def set_LDAU_tag_to_elem(self):
-        if 'LDAUL' in self.tags:
+        if 'LDAUL' not in self.tags:
             return self
-        if 'LDAUU' in self.tags:
+        if 'LDAUU' not in self.tags:
             return self
-        if 'LDAUJ' in self.tags:
+        if 'LDAUJ' not in self.tags:
             return self
         LDAUL = list(map(float, re.split('\s+', self.tags['LDAUL'].val)))
         LDAUU = list(map(float, re.split('\s+', self.tags['LDAUU'].val)))
@@ -110,10 +110,19 @@ class Info:
         ret = copy.deepcopy(self)
         ret.atoms.merge(other.atoms)
         ret.elements.merge(other.elements)
-        if ret.chgsum:
+        if ret.chgsum is not None and other.chgsum is not None:
             ret.chgsum += other.chgsum
-        if ret.chgdif:
+        elif other.chgsum is not None:
+            ret.chgsum = other.chgsum
+        if ret.chgdif is not None and other.chgdif is not None:
             ret.chgdif += other.chgdif
+        elif other.chgdif is not None:
+            ret.chgdif = other.chgdif
+        for atom in ret.atoms:
+            if atom.augdif is None and atom.augsum is not None:
+                atom.augdif = atom.augsum[:]
+                for i in range(len(atom.augdif)):
+                    atom.augdif[i] = '0.0'
         return ret
 
     def split(self):
