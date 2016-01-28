@@ -114,7 +114,7 @@ class Atom:
     @augsum.setter
     def augsum(self, augmentation):
         if augmentation is not None:
-            self._augsum = augmentation
+            self._augsum = np.array(augmentation)
         else:
             self._augsum = None
 
@@ -125,7 +125,7 @@ class Atom:
     @augdif.setter
     def augdif(self, augmentation):
         if augmentation is not None:
-            self._augdif = augmentation
+            self._augdif = np.array(augmentation)
         else:
             self._augdif = None
 

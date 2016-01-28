@@ -227,8 +227,7 @@ class Info:
 
     @chgsum.setter
     def chgsum(self, chgsum):
-        self._chgsum = list(map(float, chgsum))
-        self._chgsum = np.array(self._chgsum)
+        self._chgsum = np.array(chgsum)
 
     @property
     def chgdif(self):
@@ -236,8 +235,7 @@ class Info:
 
     @chgdif.setter
     def chgdif(self, chgdif):
-        self._chgdif = list(map(float, chgdif))
-        self._chgdif = np.array(self._chgdif)
+        self._chgdif = np.array(chgdif)
 
     @property
     def chgcell(self):
