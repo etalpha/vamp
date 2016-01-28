@@ -226,9 +226,11 @@ class Atom:
     def rotation(self, axis, center, theta=None):
         'Rodrigues\'s formula'
         assert len(axis) == 3, 'vector must be 3dimension'
+        assert len(center) == 3, 'vector must be 3dimension'
+        print('rotation in atom')
         vec = np.array(axis)
         cen = np.array(center)
-        vec = vec - cen
+        # vec = vec - cen
         if theta is None:
             theta = np.linalg.norm(vec)
         else:
@@ -242,6 +244,7 @@ class Atom:
             (vz, 0, -vx),
             (-vy, vx, 0)))
         M = I + R * np.sin(theta) / theta + R.dot(R) * (1-np.cos(theta)) / (theta**2)
+        self.coordinate -= cen
         self.transform(M)
         self.coordinate += cen
 

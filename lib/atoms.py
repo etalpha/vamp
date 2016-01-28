@@ -48,6 +48,7 @@ class Atoms(list):
                 atom.transform(matrix)
 
     def rotation(self, axis, point, theta=None, belong=None):
+        print('rotarion in atoms')
         for atom in self:
             if belong is None or atom.belong == belong:
                 atom.rotation(axis, point, theta)

@@ -102,9 +102,9 @@ class Chgcar(Frw):
             f.write('\n')
         f.write('\n')
 
+        chgformat = ff.FortranRecordWriter('(5(1X,E17.11))')
         for num in self.info.chgcell:
             f.write(' ' + '{0:>4d}'.format(num))
-        chgformat = ff.FortranRecordWriter('(5(1X,E17.11))')
         for line in self.info.chgsum:
             f.write('\n')
             f.write(chgformat.write(line).rstrip())
