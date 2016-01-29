@@ -63,6 +63,8 @@ class Vaspm:
 
     def make(self, dir_name):
         os.mkdir(dir_name)
+        self.set_magmom_pos_to_in()
+        self.set_LDAU_elem_to_tag()
         self.write_poscar(os.path.join(dir_name, 'POSCAR'))
         self.write_incar(os.path.join(dir_name, 'INCAR'))
 

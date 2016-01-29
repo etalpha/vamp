@@ -78,7 +78,7 @@ class Info:
             return self
         if 'LDAUJ' not in self.tags:
             return self
-        LDAUL = list(map(float, re.split('\s+', self.tags['LDAUL'].val)))
+        LDAUL = list(map(int, re.split('\s+', self.tags['LDAUL'].val)))
         LDAUU = list(map(float, re.split('\s+', self.tags['LDAUU'].val)))
         LDAUJ = list(map(float, re.split('\s+', self.tags['LDAUJ'].val)))
         if len(LDAUL) != len(LDAUU) or len(LDAUU) != len(LDAUJ):

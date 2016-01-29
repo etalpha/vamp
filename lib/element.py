@@ -61,7 +61,7 @@ class Element:
 
     @LDAUL.setter
     def LDAUL(self, LDAUL):
-        self._LDAUL = float(LDAUL)
+        self._LDAUL = int(LDAUL)
 
     @property
     def LDAUU(self):
