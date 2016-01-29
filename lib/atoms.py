@@ -1,3 +1,4 @@
+import numpy as np
 from .atom import Atom
 from .elements import Elements
 
@@ -47,11 +48,12 @@ class Atoms(list):
             if belong is None or atom.belong == belong:
                 atom.transform(matrix)
 
-    def rotation(self, axis, point, theta=None, belong=None):
-        print('rotarion in atoms')
+    def rotation(self, axis, center, theta=None, belong=None):
+        cp_axis = np.array(axis)
+        cp_center = np.array(center)
         for atom in self:
             if belong is None or atom.belong == belong:
-                atom.rotation(axis, point, theta)
+                atom.rotation(cp_axis, cp_center, theta)
 
     def cartesianyzation(self, lattice):
         for atom in self:

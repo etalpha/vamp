@@ -14,7 +14,7 @@ class Atom:
         self._comment = None
         self._augsum = None
         self._augdif = None
-        self._chgn = '0.0'
+        self._chgn = None
         self._pdos = None
         if atom:
             if isinstance(atom, str):
@@ -135,7 +135,7 @@ class Atom:
 
     @chgn.setter
     def chgn(self, chgn):
-        self._chgn = chgn
+        self._chgn = float(chgn)
 
     def __setitem__(self, key, value):
         if key is 'coordinate':
@@ -227,7 +227,6 @@ class Atom:
         'Rodrigues\'s formula'
         assert len(axis) == 3, 'vector must be 3dimension'
         assert len(center) == 3, 'vector must be 3dimension'
-        print('rotation in atom')
         vec = np.array(axis)
         cen = np.array(center)
         # vec = vec - cen
