@@ -10,10 +10,12 @@ class Incar(Frw):
             cast = line.strip()
             if cast == '':
                 self.info.tags[Tag()] = Tag()
+                self.info.tags.setTag(Tag(), Tag())
             else:
-                tag = Tag()
-                tag.readline_incar(cast)
-                self.info.tags[tag.key] = tag
+                self.info.tags.setTagFromIncarLine(cast)
+                # tag = Tag()
+                # tag.readline_incar(cast)
+                # self.info.tags[tag.key] = tag
 
         # self.start_reading(adress)
         # line = self.nextline()

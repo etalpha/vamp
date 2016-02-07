@@ -12,6 +12,7 @@ import copy
 class Info:
 
     def __init__(self, info=None):
+        self._system_name = ''
         self._atoms = Atoms()
         self._elements = Elements()
         self._scale = 0
@@ -51,11 +52,12 @@ class Info:
         lis3 = []
         for item in lis2:
             lis3.append('*'.join(map(str, item)))
-        self.tags['MAGMOM'].val = ' '.join(lis3)
+        self.tags.setTag('MAGMOM', ' '.join(lis3))
+        # self.tags['MAGMOM'].val = ' '.join(lis3)
 
     def set_magmom_in_to_pos(self):
-        if 'MAGMOM' in self.tags:
-            mag = self.tags['MAGMOM'].val
+        if self.tags.tagExists('MAGMOM'):
+            mag = self.getTag('MAGMOM')
             mags = re.split('\s+', mag)
             for i in range(len(mags)):
                 if '*' in mags[i]:
@@ -72,15 +74,16 @@ class Info:
                 atom.magmom = mag
 
     def set_LDAU_tag_to_elem(self):
-        if 'LDAUL' not in self.tags:
+        # if 'LDAUL' not in self.tags:
+        if not self.tags.tagExists('LDAUL'):
             return self
-        if 'LDAUU' not in self.tags:
+        if not self.tags.tagExists('LDAUU'):
             return self
-        if 'LDAUJ' not in self.tags:
+        if not self.tags.tagExists('LDAUJ'):
             return self
-        LDAUL = list(map(int, re.split('\s+', self.tags['LDAUL'].val)))
-        LDAUU = list(map(float, re.split('\s+', self.tags['LDAUU'].val)))
-        LDAUJ = list(map(float, re.split('\s+', self.tags['LDAUJ'].val)))
+        LDAUL = list(map(int, re.split('\s+', self.tags.getTag('LDAUL'))))
+        LDAUU = list(map(float, re.split('\s+', self.tags.getTag('LDAUU'))))
+        LDAUJ = list(map(float, re.split('\s+', self.tags.getTag('LDAUJ'))))
         if len(LDAUL) != len(LDAUU) or len(LDAUU) != len(LDAUJ):
             raise RuntimeError(
                 'the number of LDAU is not consistent with POSCAR')
@@ -102,7 +105,8 @@ class Info:
             ldaul.append(str(element.LDAUL))
             ldauu.append(str(element.LDAUU))
             ldauj.append(str(element.LDAUJ))
-        self.tags['LDAUL'].val = ' '.join(ldaul)
+        self.tags.setTag('LDAUL', ' '.join(ldaul))
+        # self.tags['LDAUL'].val = ' '.join(ldaul)
         self.tags['LDAUU'].val = ' '.join(ldauu)
         self.tags['LDAUJ'].val = ' '.join(ldauj)
 
@@ -156,6 +160,14 @@ class Info:
         self.atoms.reverse_mag()
         self.set_magmom_pos_to_in()
         self.set_LDAU_elem_to_tag()
+
+    @property
+    def system_name(self):
+        return self._system_Name
+
+    @system_name.setter
+    def system_name(self, system_name):
+        self._system_Name = str(system_name)
 
     @property
     def atoms(self):

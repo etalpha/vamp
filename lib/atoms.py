@@ -68,7 +68,14 @@ class Atoms(list):
             atom.magmom = -atom.magmom
 
     def __getitem__(self, key):
-        return list.__getitem__(self, key - 1)
+        print('using atoms.getitem')
+        return list.__getitem__(self, key)
+
+    def getAtom(i):
+        if not isinstance(i, int):
+            raise TypeError('Atoms.getAtom()s argument must be int')
+        else:
+            return self[i-1]
 
     def __setitem__(self, key, val):
         list.__setitem__(self, key - 1, val)

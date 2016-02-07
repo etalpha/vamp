@@ -1,5 +1,4 @@
 from .frw import Frw
-from .tag import Tag
 from .atom import Atom
 from .element import Element
 import re
@@ -17,7 +16,7 @@ class Chgcar(Frw):
     def read(self, adress):
         self.start_reading(adress)
         SYS = self.nextline()
-        self.info.tags['SYSTEM'] = Tag('SYSTEM', ' '.join(SYS))
+        self.info.system_name = ' '.join(SYS)
         self.info.unit = self.nextline()[0]
         for i in range(3):
             self.info.lattice.append(self.nextline())
@@ -74,7 +73,7 @@ class Chgcar(Frw):
 
     def write(self, adress):
         f = open(adress, 'w')
-        f.write(self.info.tags['SYSTEM'].val + '\n')
+        f.write(self.info.system_name + '\n')
         f.write('   ' + '{0:<16.14f}'.format(float(self.info.unit)).zfill(16)+ '     \n')
 
         for lat in self.info.lattice:
