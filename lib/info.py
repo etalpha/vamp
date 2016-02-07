@@ -3,6 +3,7 @@ from .atom import Atom
 from .elements import Elements
 from .element import Element
 from .tag import Tag
+from .tags import Tags
 import numpy as np
 from collections import OrderedDict
 import re
@@ -19,7 +20,7 @@ class Info:
         self._lattice = []
         self._selective_dynamics = False
         self._cartesian = False
-        self._tags = OrderedDict()
+        self._tags = Tags()
         self._chgsum = None
         self._chgdif = None
         self._chgcell = None
@@ -131,9 +132,9 @@ class Info:
 
     def split(self):
         'This method returns splited dictionaty as info type'
-        if 'MAGMOM' in self.tags:
+        if self.tags.tagExists('MAGMOM'):
             self.set_magmom_in_to_pos()
-        if 'LDAUJ' in self.tags:
+        if self.tags.tagExists('LDAUJ'):
             self.set_LDAU_tag_to_elem()
         infos = dict()
         for atom in self.atoms:
@@ -141,9 +142,9 @@ class Info:
                 infos[atom.belong] = copy.deepcopy(self)
                 infos[atom.belong].atoms = Atoms()
             infos[atom.belong].atoms.append(Atom(atom))
-        if 'MAGMOM' in self.tags:
+        if self.tags.tagExists('MAGMOM'):
             self.set_magmom_pos_to_in()
-        if 'LDAUJ' in self.tags:
+        if self.tags.tagExists('LDAUJ'):
             self.set_LDAU_elem_to_tag()
         return infos
 
